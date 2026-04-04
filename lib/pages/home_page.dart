@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String get _appBarTitle {
-    if (currentIndex == 0) return 'Instagram';
+    if (currentIndex == 0) return 'wove';
     if (currentIndex == 2) return _currentUsername;
     return '';
   }

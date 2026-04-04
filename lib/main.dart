@@ -1,3 +1,4 @@
+import 'package:app_minimal/pages/splash_screen.dart';
 import 'package:app_minimal/wrapper.dart';
 import 'package:app_minimal/themes/darkmode.dart';
 import 'package:app_minimal/themes/lightmode.dart';
@@ -18,12 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'wove',
       debugShowCheckedModeBanner: false,
       theme: lightMode, // ← your light theme
       darkTheme: darkMode, // ← your dark theme
       themeMode: ThemeMode.system, // follows device setting
-      home: const Wrapper(),
+      home: const SplashScreen(nextScreen: Wrapper()),
     );
   }
 }
