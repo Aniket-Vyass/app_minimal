@@ -75,6 +75,7 @@ class _UploadPageState extends State<UploadPage> {
       await previewController.initialize();
       previewController.setLooping(true);
 
+      if (!mounted) return;
       setState(() {
         _selectedFile = file;
         _isVideo = true;
@@ -116,6 +117,7 @@ class _UploadPageState extends State<UploadPage> {
       if (croppedFile == null) return;
 
       _videoController?.dispose();
+      if (!mounted) return;
       setState(() {
         _selectedFile = XFile(croppedFile.path);
         _isVideo = false;
@@ -234,6 +236,7 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void _showSnack(String msg) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 

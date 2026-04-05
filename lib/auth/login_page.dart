@@ -70,20 +70,24 @@ class _LoginPageState extends State<LoginPage> {
                       );
 
                       // ✅ stop loading after success
-                      setState(() {
-                        isLoading = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
                     } on FirebaseAuthException catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            e.message ?? 'Login Failed! Enter Correct details',
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.message ?? 'Login Failed! Enter Correct details',
+                            ),
                           ),
-                        ),
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
                     }
                   },
                   child: isLoading
