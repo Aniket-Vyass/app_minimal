@@ -79,74 +79,78 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.lock_open,
-                  size: 72,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 25),
-
-                Text(
-                  'Create Account',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.inversePrimary,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SizedBox(height: 180),
+                  Icon(
+                    Icons.lock_open,
+                    size: 72,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ),
-                const SizedBox(height: 30),
+                  const SizedBox(height: 25),
 
-                MyTextfield(
-                  hintText: 'Username',
-                  obscureText: false,
-                  controller: _usernameCtrl,
-                ),
-                const SizedBox(height: 12),
-
-                MyTextfield(
-                  hintText: 'Email',
-                  obscureText: false,
-                  controller: _emailCtrl,
-                ),
-                const SizedBox(height: 12),
-
-                MyTextfield(
-                  hintText: 'Password',
-                  obscureText: true,
-                  controller: _pwCtrl,
-                ),
-                const SizedBox(height: 20),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _register,
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Register'),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account? '),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Login'),
+                  Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 30),
+
+                  MyTextfield(
+                    hintText: 'Username',
+                    obscureText: false,
+                    controller: _usernameCtrl,
+                  ),
+                  const SizedBox(height: 12),
+
+                  MyTextfield(
+                    hintText: 'Email',
+                    obscureText: false,
+                    controller: _emailCtrl,
+                  ),
+                  const SizedBox(height: 12),
+
+                  MyTextfield(
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: _pwCtrl,
+                  ),
+                  const SizedBox(height: 20),
+
+                  SizedBox(
+                    height: 60,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _register,
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Register'),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already have an account? '),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
