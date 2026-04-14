@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(_appBarTitle),
           actions: [
             if (currentIndex == 2)
@@ -325,13 +326,24 @@ class _HomePageState extends State<HomePage> {
             }
             setState(() => currentIndex = index);
           },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+            const BottomNavigationBarItem(
               icon: Icon(Icons.add_box_outlined),
               label: '',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+            BottomNavigationBarItem(
+              icon: CircleAvatar(
+                radius: 14,
+                backgroundImage: _currentProfileImage.isNotEmpty
+                    ? NetworkImage(_currentProfileImage)
+                    : null,
+                child: _currentProfileImage.isEmpty
+                    ? const Icon(Icons.person, size: 14)
+                    : null,
+              ),
+              label: '',
+            ),
           ],
         ),
       ),

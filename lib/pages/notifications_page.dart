@@ -3,8 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
+
+  @override
+  State<NotificationsPage> createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+  List<QueryDocumentSnapshot> _validDocs = [];
+  bool _isFiltering = false;
 
   String _timeAgo(Timestamp? timestamp) {
     if (timestamp == null) return '';
@@ -14,6 +22,57 @@ class NotificationsPage extends StatelessWidget {
     if (diff.inHours < 24) return '${diff.inHours}h';
     if (diff.inDays < 7) return '${diff.inDays}d';
     return '${(diff.inDays / 7).floor()}w';
+  }
+
+  Future<void> _filterAndUpdate(List<QueryDocumentSnapshot> docs) async {
+    if (_isFiltering) return;
+    _isFiltering = true;
+
+    final validDocs = <QueryDocumentSnapshot>[];
+    for (final doc in docs) {
+      final data = doc.data() as Map<String, dynamic>;
+      final postId = data['postId'] ?? '';
+      final toUid = data['toUid'] ?? '';
+      final fromUid = data['fromUid'] ?? '';
+
+      if (toUid == fromUid) {
+        await doc.reference.delete();
+        continue;
+      }
+
+      if (postId.isEmpty) {
+        await doc.reference.delete();
+        continue;
+      }
+
+      final postDoc = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .get();
+
+      if (!postDoc.exists) {
+        await doc.reference.delete();
+        continue;
+      }
+
+      validDocs.add(doc);
+    }
+
+    validDocs.sort((a, b) {
+      final aTime =
+          (a.data() as Map<String, dynamic>)['createdAt'] as Timestamp?;
+      final bTime =
+          (b.data() as Map<String, dynamic>)['createdAt'] as Timestamp?;
+      if (aTime == null || bTime == null) return 0;
+      return bTime.compareTo(aTime);
+    });
+
+    if (mounted) {
+      setState(() {
+        _validDocs = validDocs;
+        _isFiltering = false;
+      });
+    }
   }
 
   @override
@@ -31,7 +90,8 @@ class NotificationsPage extends StatelessWidget {
             .where('toUid', isEqualTo: user.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              _validDocs.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
@@ -40,24 +100,17 @@ class NotificationsPage extends StatelessWidget {
 
           final docs = snapshot.data?.docs ?? [];
 
-          if (docs.isEmpty) {
+          // Re-filter every time stream emits
+          _filterAndUpdate(docs);
+
+          if (_validDocs.isEmpty) {
             return const Center(child: Text("No notifications yet"));
           }
 
-          final sorted = [...docs];
-          sorted.sort((a, b) {
-            final aData = a.data() as Map<String, dynamic>;
-            final bData = b.data() as Map<String, dynamic>;
-            final aTime = aData['createdAt'] as Timestamp?;
-            final bTime = bData['createdAt'] as Timestamp?;
-            if (aTime == null || bTime == null) return 0;
-            return bTime.compareTo(aTime);
-          });
-
           return ListView.builder(
-            itemCount: sorted.length,
+            itemCount: _validDocs.length,
             itemBuilder: (context, index) {
-              final doc = sorted[index];
+              final doc = _validDocs[index];
               final data = doc.data() as Map<String, dynamic>;
               final isRead = data['isRead'] ?? false;
               final type = data['type'] ?? 'like';
@@ -83,20 +136,18 @@ class NotificationsPage extends StatelessWidget {
                     onTap: () async {
                       await doc.reference.update({'isRead': true});
 
-                      if (postId.isEmpty) return;
+                      if (postId.isEmpty) {
+                        await doc.reference.delete();
+                        return;
+                      }
+
                       final postDoc = await FirebaseFirestore.instance
                           .collection('posts')
                           .doc(postId)
                           .get();
 
                       if (!postDoc.exists) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Post no longer exists'),
-                            ),
-                          );
-                        }
+                        await doc.reference.delete();
                         return;
                       }
 

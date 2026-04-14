@@ -216,17 +216,18 @@ class _CommentsSheetState extends State<CommentsSheet> {
   void _showDeleteDialog(VoidCallback onConfirm) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
+        // name it dialogContext
         title: const Text('Delete?'),
         content: const Text('This will permanently delete this.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext), // ✅
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext); // ✅
               onConfirm();
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),

@@ -16,6 +16,7 @@ class Post extends StatefulWidget {
   final String caption;
   final bool isVideo;
   final List<dynamic> likes;
+  final VoidCallback? onDeleted;
 
   const Post({
     super.key,
@@ -27,6 +28,7 @@ class Post extends StatefulWidget {
     required this.caption,
     this.isVideo = false,
     this.likes = const [],
+    this.onDeleted,
   });
 
   @override
