@@ -1,4 +1,4 @@
-package com.wove.app
+package com.Wove.app
 
 import io.flutter.embedding.android.FlutterActivity
 

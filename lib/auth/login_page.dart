@@ -2,8 +2,6 @@ import 'package:app_minimal/auth/register_page.dart';
 import 'package:app_minimal/widgets/my_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app_minimal/themes/darkmode.dart';
-import 'package:app_minimal/themes/lightmode.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
