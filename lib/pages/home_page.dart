@@ -7,6 +7,7 @@ import 'package:app_minimal/pages/edit_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -160,7 +161,14 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(_appBarTitle),
+          title: Text(
+            _appBarTitle,
+            style: GoogleFonts.spaceGrotesk(
+              color: Color(0xFFBB86FC), // Aesthetic soft purple,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: [
             if (currentIndex == 2)
               IconButton(
